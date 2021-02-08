@@ -42,11 +42,11 @@ if __name__ == "__main__":
     args = get_args()
 
     # iterate over files in png directory
-    for filepath in os.listdir(args.png):
-        if filepath.endswith(".png"):
+    for filename in os.listdir(args.png):
+        if filename.endswith(".png"):
             # get x, y, z values from filename
             x, y, z = 0, 0, 0
-            values = filepath.split("_")  # split on underscore
+            values = filename.split("_")  # split on underscore
             for val in values:
                 if val[0] == "x":
                     x = int(val[1:])
@@ -54,6 +54,8 @@ if __name__ == "__main__":
                     y = int(val[1:])
                 if val[0] == "z":
                     z = int(val[1:])
+
+            filepath = args.png + "/" + filename
 
             # convert .png files to .tif
             georeference_raster_tile(x, y, z, filepath)
