@@ -6,8 +6,12 @@ ESRI tile naming convention: "large_tile_x00000_y00000_z00_w64_h64.png"
 import os
 import subprocess
 import glob
+import shutil
 from osgeo import gdal
 from tile_convert import tile_edges
+
+temp_dir = os.path.join(os.path.dirname(__file__), 'temp')
+output_dir = os.path.join(os.path.dirname(__file__), 'output')
 
 def get_args():
     import argparse
@@ -31,8 +35,9 @@ def merge_tiles(input_pattern, output_path):
 
 def georeference_raster_tile(x, y, z, path):
     bounds = tile_edges(x, y, z)
-    filename, extension = os.path.splitext(path)
-    gdal.Translate(filename + '.tif',
+    name, extension = os.path.splitext(os.path.basename(path))
+    tif_path = temp_dir + "/" + name + '.tif'
+    gdal.Translate(tif_path,
                    path,
                    outputSRS='EPSG:4326',
                    outputBounds=bounds)
@@ -45,21 +50,24 @@ if __name__ == "__main__":
     for filename in os.listdir(args.png):
         if filename.endswith(".png"):
             # get x, y, z values from filename
-            x, y, z = 0, 0, 0
+            x_val, y_val, zoom = 0, 0, 0
             values = filename.split("_")  # split on underscore
             for val in values:
                 if val[0] == "x":
-                    x = int(val[1:])
+                    x_val = int(val[1:])
                 if val[0] == "y":
-                    y = int(val[1:])
+                    y_val = int(val[1:])
                 if val[0] == "z":
-                    z = int(val[1:])
+                    zoom = int(val[1:])
 
             filepath = args.png + "/" + filename
 
             # convert .png files to .tif
-            georeference_raster_tile(x, y, z, filepath)
+            georeference_raster_tile(x_val, y_val, zoom, filepath)
 
     print("Merging tiles")
-    merge_tiles(args.png + '/*.tif', args.output + '/merged.tif')
+    merge_tiles(temp_dir + '/*.tif', args.output + '/merged.tif')
     print("Merge complete")
+
+    shutil.rmtree(temp_dir)
+    os.makedirs(temp_dir)
