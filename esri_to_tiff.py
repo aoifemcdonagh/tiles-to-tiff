@@ -49,6 +49,9 @@ if __name__ == "__main__":
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
 
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # iterate over files in png directory
     for filename in os.listdir(args.png):
         if filename.endswith(".png"):
