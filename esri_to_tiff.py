@@ -46,6 +46,9 @@ def georeference_raster_tile(x, y, z, path):
 if __name__ == "__main__":
     args = get_args()
 
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+
     # iterate over files in png directory
     for filename in os.listdir(args.png):
         if filename.endswith(".png"):
