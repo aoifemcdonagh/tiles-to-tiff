@@ -57,7 +57,8 @@ if __name__ == "__main__":
         if filename.endswith(".png"):
             # get x, y, z values from filename
             x_val, y_val, zoom, w_val, h_val = 0, 0, 0, 1, 1
-            values = filename.split("_")  # split on underscore
+            image_data, _ = os.path.splitext(filename)  # get name without extension which contains image data
+            values = image_data.split("_")  # split on underscore
             for val in values:
                 if val[0] == "x":
                     x_val = int(val[1:])
