@@ -33,8 +33,8 @@ def merge_tiles(input_pattern, output_path):
     subprocess.call(merge_command)
 
 
-def georeference_raster_tile(x, y, z, path):
-    bounds = tile_edges(x, y, z)
+def georeference_raster_tile(x, y, z, path, w=1, h=1,):
+    bounds = tile_edges(x, y, z, w, h)
     name, extension = os.path.splitext(os.path.basename(path))
     tif_path = temp_dir + "/" + name + '.tif'
     gdal.Translate(tif_path,
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     for filename in os.listdir(args.png):
         if filename.endswith(".png"):
             # get x, y, z values from filename
-            x_val, y_val, zoom = 0, 0, 0
+            x_val, y_val, zoom, w_val, h_val = 0, 0, 0, 1, 1
             values = filename.split("_")  # split on underscore
             for val in values:
                 if val[0] == "x":
@@ -65,11 +65,15 @@ if __name__ == "__main__":
                     y_val = int(val[1:])
                 if val[0] == "z":
                     zoom = int(val[1:])
+                if val[0] == "w":
+                    w_val = int(val[1:])
+                if val[0] == "h":
+                    h_val = int(val[1:])
 
             filepath = args.png + "/" + filename
 
             # convert .png files to .tif
-            georeference_raster_tile(x_val, y_val, zoom, filepath)
+            georeference_raster_tile(x_val, y_val, zoom, filepath, w=w_val, h=h_val)
 
     print("Merging tiles")
     merge_tiles(temp_dir + '/*.tif', args.output + '/merged.tif')
