@@ -10,3 +10,12 @@ Python script for converting XYZ raster tiles for slippy maps to a georeferenced
 - Run script with `$ python tiles_to_tiff.py`
 
 For more information see the accompanying dev.to post. 
+
+## esri_to_tiff.py
+- Convert existing ESRI tiles to .tif files using custom naming convention  
+- ESRI tile naming convention: "large_tile_x00000_y00000_z00_w64_h64.png"  
+    - 'x': x origin point of image
+    - 'y': y origin point of image
+    - 'z': zoom level
+    - 'w': width of ESRI image in tiles
+    - 'h': height of ESRI image in tiles
