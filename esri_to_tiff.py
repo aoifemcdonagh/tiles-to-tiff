@@ -19,7 +19,7 @@ def get_args():
     parser.add_argument("--png", type=str,
                         help="directory in which ESRI .png files are stored")
     parser.add_argument("--output", type=str,
-                        help="output directory for merged .tif file")
+                        help="output name for merged .tif file")
 
     return parser.parse_args()
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             georeference_raster_tile(x_val, y_val, zoom, filepath, w=w_val, h=h_val)
 
     print("Merging tiles")
-    merge_tiles(temp_dir + '/*.tif', args.output + '/merged.tif')
+    merge_tiles(temp_dir + '/*.tif', output_dir + '/' + args.output + '.tif')
     print("Merge complete")
 
     shutil.rmtree(temp_dir)
